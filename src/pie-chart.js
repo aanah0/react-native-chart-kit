@@ -1,6 +1,6 @@
 import React from "react";
 import { View } from "react-native";
-import { Svg, Rect, Text, G, Path } from "react-native-svg";
+import { Svg, Rect, Text, G, Path, Pattern, Defs, Line } from "react-native-svg";
 import AbstractChart from "./abstract-chart";
 
 const Pie = require("paths-js/pie");
@@ -40,12 +40,12 @@ class PieChart extends AbstractChart {
 
       return (
         <G key={Math.random()}>
-          <Path d={c.sector.path.print()} fill={c.item.color} />
+          <Path d={c.sector.path.print()} fill={!c.item.stroked ? c.item.color : "url(#DiagonalHatch)"} />
           {hasLegend ? (
             <Rect
               width="16px"
               height="16px"
-              fill={c.item.color}
+              fill="url(#TrianglePattern)"
               rx={8}
               ry={8}
               x={this.props.width / 2.5 - 24}
@@ -83,6 +83,16 @@ class PieChart extends AbstractChart {
         }}
       >
         <Svg width={this.props.width} height={this.props.height}>
+          <Defs>
+            <Pattern id="DiagonalHatch" patternUnits="userSpaceOnUse" width="4" height="4">
+              <Path d="M-1,1 l2,-2
+           M0,4 l4,-4
+           M3,5 l2,-2"
+                    strokeWidth={1}
+                    stroke={'#5B58ED'}
+              />
+            </Pattern>
+          </Defs>
           <G>
             {this.renderDefs({
               width: this.props.height,
